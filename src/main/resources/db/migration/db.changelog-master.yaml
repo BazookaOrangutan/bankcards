@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/migration/changeset/2025/09/27/create-user_details-table.sql
+  - include:
+      file: db/migration/changeset/2025/09/27/create-user-table.sql
+  - include:
+      file: db/migration/changeset/2025/09/27/create-card-table.sql

@@ -1,0 +1,12 @@
+.idea/
+*.iws
+*.iml
+*.ipr
+HELP.md
+target/
+.mvn/
+*.class
+*.log
+*.tmp
+*.lock
+.env

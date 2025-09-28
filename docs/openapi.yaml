@@ -1,0 +1,1187 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+security:
+- bearerAuth: []
+tags:
+- name: Admin Card Controller
+  description: Контроллер админа для управления картами. Принимает только токены админа
+- name: User Card Controller
+  description: Контроллер юзера для управления принадлежащими ему картами. Принимает
+    только токены юзера
+- name: User Controller
+  description: Контроллер для управления пользователями. Принимает только токены админа
+- name: Dev Tools
+  description: Вспомогательные эндпоинты для разработки и тестирования. НЕ ДЛЯ ПРОДАКШЕНА!
+paths:
+  /api/v1/auth/dev/sign-up/admin:
+    put:
+      tags:
+      - Dev Tools
+      summary: Регистрация админа
+      operationId: SignUpAdmin
+      requestBody:
+        description: Данные для регистрации
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtAuthenticationResponse"
+  /api/v1/admin/users/{id}:
+    get:
+      tags:
+      - User Controller
+      summary: Получение пользователя по id
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор пользователя
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    put:
+      tags:
+      - User Controller
+      summary: Обновление данных пользователя
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор обновляемого пользователя
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Данные о пользователе для обновления
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    delete:
+      tags:
+      - User Controller
+      summary: Удаление пользователя
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор удаляемого пользователя
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "204":
+          description: No Content
+  /api/v1/cards/transfer:
+    post:
+      tags:
+      - User Card Controller
+      summary: Перевод между своими картами
+      operationId: transferMoney
+      requestBody:
+        description: Данные для перевода денег
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Unprocessable Entity
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+  /api/v1/auth/sign-up:
+    post:
+      tags:
+      - Аутентификация
+      summary: Регистрация пользователя
+      operationId: signUp
+      requestBody:
+        description: Данные для регистрации
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtAuthenticationResponse"
+  /api/v1/auth/sign-in:
+    post:
+      tags:
+      - Аутентификация
+      summary: Авторизация пользователя
+      operationId: signIn
+      requestBody:
+        description: Данные для входа
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtAuthenticationResponse"
+  /api/v1/admin/cards:
+    get:
+      tags:
+      - Admin Card Controller
+      summary: Получение всех карт
+      description: "Позволяет получить карты, указав фильтры"
+      operationId: getAllCards
+      parameters:
+      - name: cardFilter
+        in: query
+        description: Набор фильтров для карт
+        required: true
+        schema:
+          $ref: "#/components/schemas/CardFilter"
+      - name: pageable
+        in: query
+        description: Настройки Pageable
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageCardResponse"
+    post:
+      tags:
+      - Admin Card Controller
+      summary: Создание карты
+      operationId: createCard
+      requestBody:
+        description: Данные о карте для создания
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardResponse"
+  /api/v1/cards/{id}/block:
+    patch:
+      tags:
+      - User Card Controller
+      summary: Запрос на блокировку своей карты
+      operationId: blockRequestFromUser
+      parameters:
+      - name: id
+        in: path
+        description: Уникальнеый идентификатор карты для блокировки
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardResponse"
+  /api/v1/admin/cards/{id}/status/{status}:
+    patch:
+      tags:
+      - Admin Card Controller
+      summary: Изменение статуса карты
+      operationId: changeStatus
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор существующей карты
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: status
+        in: path
+        description: Новый статус карты
+        required: true
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+          - BLOCK_REQUESTED
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardResponse"
+  /api/v1/cards:
+    get:
+      tags:
+      - User Card Controller
+      summary: Получение всех своих карт пользователем
+      operationId: getAllMyCards
+      parameters:
+      - name: cardFilter
+        in: query
+        description: Набор фильтров для карт
+        required: true
+        schema:
+          $ref: "#/components/schemas/CardFilter"
+      - name: pageable
+        in: query
+        description: Настройки Pageable
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageCardResponse"
+  /api/v1/cards/{id}/balance:
+    get:
+      tags:
+      - User Card Controller
+      summary: Получение баланса карты
+      operationId: getBalance
+      parameters:
+      - name: id
+        in: path
+        description: Уникалльный идентификатор карты
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: number
+                format: double
+  /api/v1/admin/users:
+    get:
+      tags:
+      - User Controller
+      summary: Получение всех пользователей
+      operationId: getAllUsers
+      parameters:
+      - name: userFilter
+        in: query
+        description: Набор фильтров для пользователей
+        required: true
+        schema:
+          $ref: "#/components/schemas/UserFilter"
+      - name: pageable
+        in: query
+        description: Настройки Pageable
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageUserResponse"
+  /api/v1/admin/cards/{id}:
+    get:
+      tags:
+      - Admin Card Controller
+      summary: Получение карты по id
+      operationId: getCardById
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор карты
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardResponse"
+    delete:
+      tags:
+      - Admin Card Controller
+      summary: Удаление карты по ее id
+      operationId: deleteCard
+      parameters:
+      - name: id
+        in: path
+        description: Уникальный идентификатор карты
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "204":
+          description: No Content
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    SignUpRequest:
+      type: object
+      description: Запрос на регистрацию
+      properties:
+        phone:
+          type: string
+          description: Номер телефона
+          example: "+74214354444"
+          maxLength: 16
+          minLength: 3
+          pattern: "^\\+?[1-9]\\d{1,14}$"
+        email:
+          type: string
+          description: Адрес электронной почты
+          example: user@gmail.com
+          maxLength: 255
+          minLength: 5
+        password:
+          type: string
+          description: Пароль
+          example: my_1secret1_password
+          maxLength: 255
+          minLength: 8
+        name:
+          type: string
+          description: ФИО пользователя
+          example: Иванов Иван Иванович
+      required:
+      - email
+      - name
+      - password
+      - phone
+    JwtAuthenticationResponse:
+      type: object
+      description: Ответ c токеном доступа
+      properties:
+        token:
+          type: string
+          description: Токен доступа
+          example: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMjUwNj...
+    UserRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: Номер телефона
+          example: "+79606006060"
+          pattern: "^\\+?[1-9]\\d{1,14}$"
+        email:
+          type: string
+          description: email пользователя
+          example: email@mail.ru
+        name:
+          type: string
+          description: ФИО пользователя
+          example: Иванов Иван Иванович
+          maxLength: 100
+          minLength: 0
+        password:
+          type: string
+          description: Новый пароль пользователя
+          example: secret_pass1
+          maxLength: 2147483647
+          minLength: 8
+      required:
+      - email
+      - name
+      - phone
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum:
+          - ROLE_USER
+          - ROLE_ADMIN
+        cardIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+    TransferRequest:
+      type: object
+      properties:
+        sourceCardId:
+          type: string
+          format: uuid
+          description: id карты списания
+          example: 5c87ad40-ca0e-42a7-ae86-c406e776f81e
+        targetCardId:
+          type: string
+          format: uuid
+          description: id карты зачисления
+          example: dc6070b2-f478-493b-8fb7-91dcedbb7a25
+        amount:
+          type: number
+          format: double
+          description: Сумма перевода
+          example: 5000
+          minimum: 0.01
+      required:
+      - sourceCardId
+      - targetCardId
+    SignInRequest:
+      type: object
+      description: Запрос на аутентификацию
+      properties:
+        phone:
+          type: string
+          description: Номер телефона
+          example: "+74214354444"
+          maxLength: 16
+          minLength: 3
+          pattern: "^\\+?[1-9]\\d{1,14}$"
+        password:
+          type: string
+          description: Пароль
+          example: my_1secret1_password
+          maxLength: 255
+          minLength: 8
+      required:
+      - password
+      - phone
+    CardRequest:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          description: Номер карты
+          example: 1234123412341234
+        expiryDate:
+          type: string
+          format: date
+          description: Срок действия карты
+          example: 2030-03-25
+        balance:
+          type: number
+          description: Баланс карты
+          example: 0
+          minimum: 0.0
+        userId:
+          type: string
+          format: uuid
+          description: Id владельца
+          example: 5c87ad40-ca0e-42a7-ae86-c406e776f81e
+      required:
+      - cardNumber
+      - expiryDate
+      - userId
+    CardResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cardNumber:
+          type: string
+        expiryDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+          - BLOCK_REQUESTED
+        balance:
+          type: number
+        userId:
+          type: string
+          format: uuid
+    CardFilter:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус карты
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+          - BLOCK_REQUESTED
+          example: ACTIVE
+        userId:
+          type: string
+          format: uuid
+          description: Id пользователя
+          example: 329f82e1-6d5a-40d9-91f3-11e5fccd249a
+        balance:
+          type: number
+          format: double
+          description: Больше или равно балансу на карте
+          example: 1000
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    PageCardResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardResponse"
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        paged:
+          type: boolean
+        pageSize:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    UserFilter:
+      type: object
+      properties:
+        role:
+          type: string
+          description: Роль пользователя
+          example: ROLE_ADMIN
+    PageUserResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        empty:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT
